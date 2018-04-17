@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wxshop.dao.GoodsDao">
+
+	<sql id="goodsColumns">
+		a.gid AS "gid",
+		a.iid AS "item.iid",
+		a.title AS "title",
+		a.pubdate AS "pubdate",
+		a.price AS "price",
+		a.amount AS "amount",
+		a.bow AS "bow",
+		a.note AS "note",
+		a.photo AS "photo",
+		a.status AS "status"
+	</sql>
+
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="Goods">
+		SELECT
+		<include refid="goodsColumns"/>
+		FROM goods a
+		WHERE a.gid = #{gid}
+	</select>
+
+	<!-- 根据登录名查询用户 -->
+	<select id="getByName" resultType="Goods" parameterType="Goods">
+		SELECT
+		<include refid="goodsColumns"/>
+		FROM goods a
+		<!--
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		WHERE a.title = #{title}
+	</select>
+
+	<!-- 分页查询所有商品信息 -->
+	<select id="findList" resultType="Goods">
+		select
+		<include refid="goodsColumns"/>
+		from goods a
+		where 1=1
+		<if test="status != null and status != '' or status == 0 ">
+			and a.status like CONCAT('%',#{status},'%')
+		</if>
+		<if test="title != null and title != ''">
+			and a.title like CONCAT('%', #{title}, '%')
+		</if>
+		<if test="item != null and item.iid != null and item.iid != '' ">
+			and a.iid like CONCAT('%', #{item.iid}, '%')
+		</if>
+		order by a.gid
+	</select>
+
+	<!-- 根据OfficeId获取用户（树查询用户时用） -->
+	<select id="findGoodsByMid" resultType="Goods" useCache="true">
+		SELECT
+		<include refid="goodsColumns"/>
+		FROM goods a
+		WHERE  a.gid = #{gid}
+		ORDER BY a.gid
+	</select>
+
+	<!-- 查询全部用户 -->
+	<select id="findAllList" resultType="Goods">
+		SELECT
+		<include refid="goodsColumns"/>
+		FROM goods a
+		WHERE a.status = 1
+		<if test="title != null and title != ''">
+			and a.title like CONCAT('%', #{title}, '%')
+		</if>
+		<if test="item != null and item.iid != null and item.iid != '' ">
+			and a.iid like CONCAT('%', #{item.iid}, '%')
+		</if>
+		ORDER BY a.gid
+	</select>
+
+	<!-- 查询全部用户数目 -->
+	<select id="findAllCount" resultType="long">
+		SELECT
+		COUNT(1)
+		FROM goods a
+		WHERE a.status = #{DEL_FLAG_NORMAL}
+	</select>
+
+	<!-- 插入用户 -->
+	<insert id="insert">
+		INSERT INTO goods(
+		iid,
+		title,
+		pubdate,
+		price,
+		amount,
+		note,
+		photo,
+		status
+		) VALUES (
+		#{item.iid},
+		#{title},
+		#{pubdate},
+		#{price},
+		#{amount},
+		#{note},
+		#{photo},
+		#{status}
+		)
+	</insert>
+
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE goods SET
+		iid = #{item.iid},
+		title = #{title},
+		price = #{price},
+		amount = #{amount},
+		note = #{note},
+		photo = #{photo},
+		status = #{status}
+		WHERE gid = #{gid}
+	</update>
+
+	<!-- 更新用户信息  -->
+	<update id="updateGoodsInfo">
+		UPDATE goods SET
+		name = #{name},
+		phone = #{phone},
+		address = #{address},
+		photo = #{photo},
+		status = #{delFlag}
+		WHERE gid = #{gid}
+	</update>
+
+
+
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		UPDATE goods SET
+			status = '0'
+		WHERE gid = #{gid}
+	</update>
+
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wxshop.dao.MemberDao">
+
+	<sql id="memberColumns">
+		a.mid AS "mid",
+		a.password AS "password",
+		a.name AS "name",
+		a.phone AS "phone",
+		a.address AS "address",
+		a.code AS "code",
+		a.regdate AS "regdate",
+		a.photo AS "photo",
+		a.status AS "delFlag"
+	</sql>
+
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="Member">
+		SELECT
+		<include refid="memberColumns"/>
+		FROM member a
+		WHERE a.mid = #{mid}
+	</select>
+
+	<!-- 根据登录名查询用户 -->
+	<select id="getByName" resultType="Member" parameterType="Member">
+		SELECT
+		<include refid="memberColumns"/>
+		FROM member a
+		<!--
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		WHERE a.name = #{name}
+	</select>
+
+	<!-- 分页查询所有用户信息 -->
+	<select id="findList" resultType="Member">
+		select
+		<include refid="memberColumns"/>
+		from member a
+		where 1=1
+		<if test="delFlag != null and delFlag != ''">
+			and a.status like CONCAT('%',#{delFlag},'%')
+		</if>
+		<if test="mid != null and mid != ''">
+			and a.mid like CONCAT('%', #{mid}, '%')
+		</if>
+		order by a.mid
+	</select>
+
+	<!-- 根据OfficeId获取用户（树查询用户时用） -->
+	<select id="findMemberByMid" resultType="Member" useCache="true">
+		SELECT
+		<include refid="memberColumns"/>
+		FROM member a
+		WHERE  a.mid = #{mid}
+		ORDER BY name
+	</select>
+
+	<!-- 查询全部用户 -->
+	<select id="findAllList" resultType="Member">
+		SELECT
+		<include refid="memberColumns"/>
+		FROM member a
+		WHERE a.status = #{DEL_FLAG_NORMAL}
+		ORDER BY name
+	</select>
+
+	<!-- 查询全部用户数目 -->
+	<select id="findAllCount" resultType="long">
+		SELECT
+		COUNT(1)
+		FROM member a
+		WHERE a.status = #{DEL_FLAG_NORMAL}
+	</select>
+
+	<!-- 插入用户 -->
+	<insert id="insert">
+		INSERT INTO member(
+		mid,
+		password,
+		name,
+		phone,
+		address,
+		regdate,
+		photo,
+		status
+		) VALUES (
+		#{mid},
+		#{password},
+		#{name},
+		#{phone},
+		#{address},
+		#{regdate},
+		#{photo},
+		#{delFlag}
+		)
+	</insert>
+
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE member SET
+		name = #{name},
+		phone = #{phone},
+		address = #{address},
+		photo = #{photo},
+		status = #{delFlag}
+		WHERE mid = #{mid}
+	</update>
+
+	<!-- 更新用户信息  -->
+	<update id="updateMemberInfo">
+		UPDATE member SET
+		name = #{name},
+		phone = #{phone},
+		address = #{address},
+		photo = #{photo},
+		status = #{delFlag}
+		WHERE mid = #{mid}
+	</update>
+
+
+
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		UPDATE member SET
+			status = '0'
+		WHERE mid = #{mid}
+	</update>
+
+</mapper>

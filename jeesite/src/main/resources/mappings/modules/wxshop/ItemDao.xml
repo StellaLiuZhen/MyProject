@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wxshop.dao.ItemDao">
+
+	<sql id="itemColumns">
+		a.iid AS "iid",
+		a.title AS "title"
+	</sql>
+
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="Item">
+		SELECT
+		<include refid="itemColumns"/>
+		FROM item a
+		WHERE a.iid = #{iid}
+	</select>
+
+	<!-- 根据登录名查询用户 -->
+	<select id="getByName" resultType="Item" parameterType="Item">
+		SELECT
+		<include refid="itemColumns"/>
+		FROM item a
+		<!--
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		WHERE a.title = #{title}
+	</select>
+
+	<!-- 分页查询所有用户信息 -->
+	<select id="findList" resultType="Item">
+		select
+		<include refid="itemColumns"/>
+		from item a
+		where 1=1
+		<if test="title != null and title != ''">
+			and a.title like CONCAT('%',#{title},'%')
+		</if>
+		<if test="iid != null and iid != ''">
+			and a.iid like CONCAT('%', #{iid}, '%')
+		</if>
+		order by a.iid
+	</select>
+
+	<!-- 根据OfficeId获取用户（树查询用户时用） -->
+	<select id="findItemByIid" resultType="Item" useCache="true">
+		SELECT
+		<include refid="itemColumns"/>
+		FROM item a
+		WHERE  a.iid = #{iid}
+		ORDER BY iid
+	</select>
+
+	<!-- 查询全部用户 -->
+	<select id="findAll" resultType="Item">
+		SELECT
+		<include refid="itemColumns"/>
+		FROM item a
+		ORDER BY iid
+	</select>
+
+	<!-- 查询全部用户 -->
+	<select id="findAllList" resultType="Item">
+		SELECT
+		<include refid="itemColumns"/>
+		FROM item a
+		WHERE a.status = #{DEL_FLAG_NORMAL}
+		ORDER BY iid
+	</select>
+
+	<!-- 查询全部用户数目 -->
+	<select id="findAllCount" resultType="long">
+		SELECT
+		COUNT(1)
+		FROM item a
+	</select>
+
+	<!-- 插入用户 -->
+	<insert id="insert">
+		INSERT INTO item(
+		title
+		) VALUES (
+		#{title}
+		)
+	</insert>
+
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE item SET
+		title = #{title}
+		WHERE iid = #{iid}
+	</update>
+
+	<!-- 更新用户信息  -->
+	<update id="updateItemInfo">
+		UPDATE item SET
+		title = #{title}
+		WHERE iid = #{iid}
+	</update>
+
+
+
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		delete from item
+		WHERE iid = #{iid}
+	</update>
+
+</mapper>

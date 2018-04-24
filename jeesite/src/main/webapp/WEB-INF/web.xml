@@ -66,6 +66,7 @@
 		<url-pattern>*.html</url-pattern>
 	</filter-mapping>-->
 
+
 	<!-- SiteMesh -->
 	<filter>
 		<filter-name>sitemeshFilter</filter-name>

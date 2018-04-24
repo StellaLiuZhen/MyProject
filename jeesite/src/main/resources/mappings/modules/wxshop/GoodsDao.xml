@@ -60,6 +60,15 @@
 		ORDER BY a.gid
 	</select>
 
+	<select id="findAllByGid" resultType="Goods" useCache="true">
+		SELECT
+		<include refid="goodsColumns"/>
+		FROM goods a
+		WHERE  a.gid = #{gid}
+		AND a.status = #{status}
+		ORDER BY a.gid
+	</select>
+
 	<!-- 查询全部用户 -->
 	<select id="findAllList" resultType="Goods">
 		SELECT
@@ -116,6 +125,13 @@
 		note = #{note},
 		photo = #{photo},
 		status = #{status}
+		WHERE gid = #{gid}
+	</update>
+
+	<!-- 更新用户 -->
+	<update id="doUpdateBow">
+		UPDATE goods SET
+		bow = bow + 1
 		WHERE gid = #{gid}
 	</update>
 

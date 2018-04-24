@@ -40,6 +40,10 @@ public class MemberServiceBack extends BaseService implements InitializingBean {
         return MemberUtils.get(mid);
     }
 
+    public boolean findLoginMember(String mid) {
+        return memberDao.findLogin(mid);
+    }
+
     public String getName(String mid) {
         return MemberUtils.get(mid).getName();
     }

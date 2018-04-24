@@ -46,7 +46,7 @@ public interface MemberDao extends CrudDao<Member> {
      * @throws Exception
      * @Date: 23:13 2018/3/13
      */
-    public boolean findLogin(Member vo) throws Exception ;
+    public boolean findLogin(String mid) ;
 
     /**
      * 根据用户的状态来进行数据的列表操作

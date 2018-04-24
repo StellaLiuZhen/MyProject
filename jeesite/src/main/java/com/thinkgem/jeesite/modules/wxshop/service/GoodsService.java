@@ -42,6 +42,14 @@ public class GoodsService extends BaseService implements InitializingBean {
         return GoodsUtils.get(gid);
     }
 
+    @Transactional(readOnly = false)
+    public Goods showGoods(String gid) {
+        Goods goods = new Goods();
+        goods = GoodsUtils.get(gid);
+        goodsDao.doUpdateBow(goods.getGid());
+        return goods;
+    }
+
     public String getTitle(String gid) {
         return GoodsUtils.get(gid).getTitle();
     }

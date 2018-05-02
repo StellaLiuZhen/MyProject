@@ -4,7 +4,7 @@
 <head>
     <title>商品管理</title>
     <meta name="decorator" content="default"/>
-    <script type="text/javascript" src="http://localhost:8080/js/shopcar.js"></script>
+    <script type="text/javascript" src="http://localhost:8080/${ctxStatic}/js/shopcar.js"></script>
 </head>
 <body>
 

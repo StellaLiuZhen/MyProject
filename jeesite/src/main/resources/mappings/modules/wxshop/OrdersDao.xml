@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wxshop.dao.OrdersDao">
+
+	<sql id="ordersColumns">
+		a.oid AS "oid",
+		a.mid AS "member.mid",
+		a.phone AS "phone",
+		a.address AS "address",
+		a.credate AS "credate",
+		a.pay AS "pay"
+	</sql>
+
+
+
+	<!-- 根据登录名查询用户 -->
+	<select id="getByName" resultType="Orders" parameterType="Orders">
+		SELECT
+		<include refid="ordersColumns"/>
+		FROM orders a
+		<!--
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		WHERE a.title = #{title}
+	</select>
+
+	<!-- 根据OfficeId获取用户（树查询用户时用） -->
+	<select id="findOrdersByIid" resultType="Orders" useCache="true">
+		SELECT
+		<include refid="ordersColumns"/>
+		FROM orders a
+		WHERE  a.iid = #{iid}
+		ORDER BY iid
+	</select>
+
+
+
+
+
+
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE orders SET
+		amount = amount + 1
+		WHERE gid = #{goods.gid}
+		AND mid = #{member.mid}
+	</update>
+
+	<!-- 更新用户 -->
+	<update id="changeAmount">
+		UPDATE orders SET
+		amount = #{amount}
+		WHERE gid = #{goods.gid}
+		AND mid = #{member.mid}
+	</update>
+
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		delete from orders
+		WHERE gid = #{goods.gid}
+		AND mid = #{member.mid}
+	</update>
+
+
+
+	<select id="findByMid" resultType="Integer">
+		select gid
+		from orders a
+		where mid = #{member.mid}
+	</select>
+
+	<!-- 查询全部用户数目 -->
+	<select id="findAllCount" resultType="long">
+		SELECT
+		COUNT(1)
+		FROM orders a
+	</select>
+
+	<!-- 更新用户信息  -->
+	<update id="updateOrdersInfo">
+		UPDATE orders SET
+		title = #{title}
+		WHERE iid = #{iid}
+	</update>
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 插入用户 -->
+	<insert id="insert">
+		INSERT INTO orders(
+		mid,phone,address,credate,pay
+		) VALUES (
+		#{member.mid},#{phone},#{address},#{credate},#{pay}
+		)
+	</insert>
+
+	<!-- 查询全部用户数目 -->
+	<select id="findLastInsertId" resultType="Integer">
+		SELECT
+		LAST_INSERT_ID()
+	</select>
+
+	<!-- 分页查询所有用户信息 -->
+	<select id="findList" resultType="Orders">
+		select
+		<include refid="ordersColumns"/>
+		from orders a
+		where mid = #{member.mid}
+	</select>
+
+	<!-- 管理员查询所有订单 -->
+	<select id="findOrders" resultType="Orders">
+		select
+		<include refid="ordersColumns"/>
+		from orders a
+		where 1=1
+		<if test="member != null and member.mid != null and member.mid != '' ">
+			and a.mid like CONCAT('%', #{member.mid}, '%')
+		</if>
+		order by a.oid
+	</select>
+
+
+	<!-- 查询全部用户 -->
+	<select id="findAll" resultType="Orders">
+		SELECT
+		<include refid="ordersColumns"/>
+		FROM orders a
+		ORDER BY oid
+	</select>
+
+	<!-- 根据订编号获得一张订单 -->
+	<select id="get" resultType="Orders">
+		SELECT
+		<include refid="ordersColumns"/>
+		FROM orders a
+		WHERE a.oid = #{oid}
+	</select>
+
+
+
+</mapper>

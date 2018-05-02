@@ -23,6 +23,14 @@
 		WHERE a.gid = #{gid}
 	</select>
 
+	<!-- 根据编号获得用户 -->
+	<select id="getAmount" resultType="Goods">
+		SELECT
+		<include refid="goodsColumns"/>
+		FROM goods a
+		WHERE a.gid = #{gid}
+	</select>
+
 	<!-- 根据登录名查询用户 -->
 	<select id="getByName" resultType="Goods" parameterType="Goods">
 		SELECT
@@ -51,21 +59,15 @@
 		order by a.gid
 	</select>
 
-	<!-- 根据OfficeId获取用户（树查询用户时用） -->
-	<select id="findGoodsByMid" resultType="Goods" useCache="true">
+	<select id="findAllByGid" parameterType="List" resultType="Goods" useCache="true">
 		SELECT
 		<include refid="goodsColumns"/>
 		FROM goods a
-		WHERE  a.gid = #{gid}
-		ORDER BY a.gid
-	</select>
-
-	<select id="findAllByGid" resultType="Goods" useCache="true">
-		SELECT
-		<include refid="goodsColumns"/>
-		FROM goods a
-		WHERE  a.gid = #{gid}
-		AND a.status = #{status}
+		WHERE  a.gid in
+		<foreach collection="list" item="gids" index="index" separator=","  open="(" close=")">
+			#{gids}
+		</foreach>
+		AND a.status = 1
 		ORDER BY a.gid
 	</select>
 
@@ -133,6 +135,12 @@
 		UPDATE goods SET
 		bow = bow + 1
 		WHERE gid = #{gid}
+	</update>
+
+	<update id="doUpdateAmount">
+		UPDATE goods SET
+		amount = amount - #{1}
+		WHERE gid = #{0}
 	</update>
 
 	<!-- 更新用户信息  -->

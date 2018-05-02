@@ -14,6 +14,37 @@
 		a.status AS "delFlag"
 	</sql>
 
+
+
+
+
+
+	<!-- 更新用户 -->
+	<update id="doUpdateMember">
+		UPDATE member SET
+		phone = #{phone},
+		address = #{address}
+		WHERE mid = #{mid}
+	</update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<!-- 根据编号获得用户 -->
 	<select id="get" resultType="Member">
 		SELECT

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.wxshop.dao.ShopcarDao">
+
+	<sql id="shopcarColumns">
+		a.gid AS "goods.gid",
+		a.mid AS "member.mid",
+		a.amount AS "amount"
+	</sql>
+
+
+
+	<!-- 根据登录名查询用户 -->
+	<select id="getByName" resultType="Shopcar" parameterType="Shopcar">
+		SELECT
+		<include refid="shopcarColumns"/>
+		FROM shopcar a
+		<!--
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		WHERE a.title = #{title}
+	</select>
+
+	<!-- 根据OfficeId获取用户（树查询用户时用） -->
+	<select id="findShopcarByIid" resultType="Shopcar" useCache="true">
+		SELECT
+		<include refid="shopcarColumns"/>
+		FROM shopcar a
+		WHERE  a.iid = #{iid}
+		ORDER BY iid
+	</select>
+
+	<!-- 查询全部用户 -->
+	<select id="findAll" resultType="Shopcar">
+		SELECT
+		<include refid="shopcarColumns"/>
+		FROM shopcar a
+		ORDER BY iid
+	</select>
+
+	<!-- 查询全部用户 -->
+	<select id="findAllList" resultType="Shopcar">
+		SELECT
+		<include refid="shopcarColumns"/>
+		FROM shopcar a
+		WHERE a.status = #{DEL_FLAG_NORMAL}
+		ORDER BY iid
+	</select>
+
+
+
+
+
+
+
+	<!-- 根据编号获得用户 -->
+	<select id="get" resultType="Shopcar">
+		SELECT
+		<include refid="shopcarColumns"/>
+		FROM shopcar a
+		WHERE a.gid = #{goods.gid}
+		AND a.mid = #{member.mid}
+	</select>
+
+	<!-- 插入用户 -->
+	<insert id="insert">
+		INSERT INTO shopcar(
+		gid,mid,amount
+		) VALUES (
+		#{goods.gid},#{member.mid},1
+		)
+	</insert>
+
+	<!-- 更新用户 -->
+	<update id="update">
+		UPDATE shopcar SET
+		amount = amount + 1
+		WHERE gid = #{goods.gid}
+		AND mid = #{member.mid}
+	</update>
+
+	<!-- 更新用户 -->
+	<update id="changeAmount">
+		UPDATE shopcar SET
+		amount = #{amount}
+		WHERE gid = #{goods.gid}
+		AND mid = #{member.mid}
+	</update>
+
+	<!-- 逻辑删除用户 -->
+	<update id="delete">
+		delete from shopcar
+		WHERE gid = #{goods.gid}
+		AND mid = #{member.mid}
+	</update>
+
+	<!-- 逻辑删除用户 -->
+	<update id="deleteAll">
+		delete from shopcar
+		WHERE mid = #{member.mid}
+	</update>
+
+    <!-- 分页查询所有用户信息 -->
+    <select id="findList" resultType="Shopcar">
+        select
+        <include refid="shopcarColumns"/>
+        from shopcar a
+        where mid = #{member.mid}
+    </select>
+
+	<select id="findByMid" resultType="Integer">
+		select gid
+		from shopcar a
+		where mid = #{member.mid}
+	</select>
+
+	<select id="findByMember" resultType="Shopcar">
+		select
+		<include refid="shopcarColumns"/>
+		from shopcar a
+		where mid = #{member.mid}
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 查询全部用户数目 -->
+	<select id="findAllCount" resultType="long">
+		SELECT
+		COUNT(1)
+		FROM shopcar a
+	</select>
+
+
+
+
+	<!-- 更新用户信息  -->
+	<update id="updateShopcarInfo">
+		UPDATE shopcar SET
+		title = #{title}
+		WHERE iid = #{iid}
+	</update>
+
+</mapper>

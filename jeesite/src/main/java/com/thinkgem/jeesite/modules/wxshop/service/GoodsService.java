@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class GoodsService extends BaseService implements InitializingBean {
@@ -31,6 +28,11 @@ public class GoodsService extends BaseService implements InitializingBean {
 
     @Autowired
     private IdentityService identityService;
+
+
+    public List<Goods> findAllGoods(List<Integer> gids){
+        return goodsDao.findAllByGid(gids) ;
+    }
 
     /**
      * 获取用户
@@ -68,12 +70,6 @@ public class GoodsService extends BaseService implements InitializingBean {
         // 执行分页查询
         page.setList(goodsDao.findAllList(goods));
         return page;
-    }
-
-    public Map<String, Object> insertPre() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("allItems", itemDao.findAll());
-        return map;
     }
 
 

@@ -35,7 +35,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/wxshop/goods/list">商品列表</a></li>
-		<li class="active"><a href="${ctx}/wxshop/goods/form?gid=${goods.gid}">商品<shiro:hasPermission name="wxshop:goods:edit">${not empty goods.gid?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="wxshop:goods:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/front/form?gid=${goods.gid}">商品<shiro:hasPermission name="wxshop:goods:edit">${not empty goods.gid?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="wxshop:goods:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="goods" action="${ctx}/wxshop/goods/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>

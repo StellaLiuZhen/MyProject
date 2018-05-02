@@ -40,9 +40,6 @@ public class MemberServiceBack extends BaseService implements InitializingBean {
         return MemberUtils.get(mid);
     }
 
-    public boolean findLoginMember(String mid) {
-        return memberDao.findLogin(mid);
-    }
 
     public String getName(String mid) {
         return MemberUtils.get(mid).getName();
@@ -80,22 +77,15 @@ public class MemberServiceBack extends BaseService implements InitializingBean {
         }
     }
 
-    public Map<String, Object> listByStatus(int status, int currentPage, int lineSize, String column, String keyWord) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("allMembers", memberDao.findAllByStatus(status, currentPage, lineSize, column, keyWord));
-        map.put("memberCount", memberDao.getAllCountByStatus(status, column, keyWord));
-        return map;
+    @Transactional(readOnly = false)
+    public void updateMember(Member member){
+        if (StringUtils.isBlank(member.getName())){
+            memberDao.doUpdateMember(member);
+        }
     }
 
 
-    public boolean updateActive(Set<String> ids) throws Exception {
-        return memberDao.doUpdateStatus(ids, 1);
-    }
 
-
-    public boolean updateLock(Set<String> ids) throws Exception {
-        return memberDao.doUpdateStatus(ids, 0);
-    }
 
     @Transactional(readOnly = false)
     public void saveMember(Member member) {

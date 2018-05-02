@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -29,6 +30,15 @@ public class Member extends DataEntity<Member> {
 	private Date regdate;
 	private String photo;
 	private String delFlag;	// 是否允许登陆
+	private List<Orders> allOrders ;
+
+	public List<Orders> getAllOrders() {
+		return allOrders;
+	}
+
+	public void setAllOrders(List<Orders> allOrders) {
+		this.allOrders = allOrders;
+	}
 
 	public Member() {
 		super();

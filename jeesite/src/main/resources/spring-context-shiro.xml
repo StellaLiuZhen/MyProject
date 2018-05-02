@@ -16,7 +16,7 @@
 			<value>
 				/static/** = anon
 				/userfiles/** = anon
-				/wxshop/goods/** = anon
+				/front/** = anon
 				${adminPath}/cas = cas
 				${adminPath}/login = authc
 				${adminPath}/logout = logout

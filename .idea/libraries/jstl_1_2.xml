@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="jstl-1.2">
+    <CLASSES>
+      <root url="jar://E:/jar-lib/jstl-1.2.jar!/" />
+      <root url="jar://E:/jar-lib/jspSmartUpload.jar!/" />
+      <root url="jar://E:/jar-lib/standard-1.1.2.jar!/" />
+      <root url="jar://E:/jar-lib/mysql-connector-java-5.1.45.jar!/" />
+      <root url="jar://C:/Program Files/Apache Software Foundation/Tomcat 9.0/lib/servlet-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -8,12 +8,9 @@
 <body>
 <div>
     <c:if test="${mid != null}">
-        <h1>${mid} 您好，感谢登录使用！</h1>
-        <a href="frontList">商品列表</a><br>
-        <a href="shopcarList">购物车</a><br>
-        <a href="">全部订单</a><br>
-        <a href="showMember">个人中心</a><br>
-        <a href="logout">安全退出</a><br><br>
+        <br><br>
+        ${mid} 您好，感谢登录使用！  <a href="showMember">个人中心</a>     <a href="logout">安全退出</a><br><br>
+        <a href="frontList">商品列表</a>  <a href="shopcarList">购物车</a>  <a href="ordersList">全部订单</a><br><br><br>
     </c:if>
 </div>
 

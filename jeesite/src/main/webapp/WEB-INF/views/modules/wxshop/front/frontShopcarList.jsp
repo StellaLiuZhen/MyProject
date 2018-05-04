@@ -4,17 +4,15 @@
 <head>
     <title>商品管理</title>
     <meta name="decorator" content="default"/>
-    <script type="text/javascript" src="http://47.106.71.180:8080/${ctxStatic}/js/shopcar.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/shopcar.js"></script>
 </head>
 <body>
-
+<h1>${pageContext.request.contextPath}</h1>
 <div>
     <c:if test="${mid != null}">
-        <h1>${mid} 您好，感谢登录使用！</h1>
-        <a href="frontList">商品列表</a><br>
-        <a href="shopcarList">购物车</a><br>
-        <a href=" ">个人中心</a><br>
-        <a href="logout">安全退出</a><br><br>
+        <br><br>
+        ${mid} 您好，感谢登录使用！  <a href="showMember">个人中心</a>     <a href="logout">安全退出</a><br><br>
+        <a href="frontList">商品列表</a>  <a href="shopcarList">购物车</a>  <a href="ordersList">全部订单</a><br><br><br>
     </c:if>
 </div>
 

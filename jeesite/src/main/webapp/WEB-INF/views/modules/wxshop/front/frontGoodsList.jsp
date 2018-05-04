@@ -14,7 +14,7 @@
 		<a href="frontList">商品列表</a>  <a href="shopcarList">购物车</a>  <a href="ordersList">全部订单</a><br><br><br>
 	</c:if>
 </div>
-	<form:form id="searchForm" modelAttribute="goods" action="front/frontList" method="post" class="breadcrumb form-search ">
+	<form:form id="searchForm" modelAttribute="goods" action="/front/frontList" method="post" class="breadcrumb form-search ">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>

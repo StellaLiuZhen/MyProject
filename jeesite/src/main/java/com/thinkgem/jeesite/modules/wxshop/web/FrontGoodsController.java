@@ -74,7 +74,7 @@ public class FrontGoodsController extends BaseController {
 
 
     @RequestMapping(value = {"logout", ""})
-    public String logout(Goods goods, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
         return "modules/wxshop/login";
     }
@@ -235,7 +235,7 @@ public class FrontGoodsController extends BaseController {
 
 
     @RequestMapping(value = {"detailsList", ""})
-    public String detailsList(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String detailsList(HttpServletRequest request) {
 
         int oid = Integer.parseInt(request.getParameter("oid"));
         String mid = (String) request.getSession().getAttribute("mid");

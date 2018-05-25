@@ -8,7 +8,8 @@
 		a.phone AS "phone",
 		a.address AS "address",
 		a.credate AS "credate",
-		a.pay AS "pay"
+		a.pay AS "pay",
+		a.delivery As "delivery"
 	</sql>
 
 
@@ -40,9 +41,8 @@
 	<!-- 更新用户 -->
 	<update id="update">
 		UPDATE orders SET
-		amount = amount + 1
-		WHERE gid = #{goods.gid}
-		AND mid = #{member.mid}
+		delivery = #{delivery}
+		WHERE oid = #{oid}
 	</update>
 
 	<!-- 更新用户 -->
@@ -75,12 +75,7 @@
 		FROM orders a
 	</select>
 
-	<!-- 更新用户信息  -->
-	<update id="updateOrdersInfo">
-		UPDATE orders SET
-		title = #{title}
-		WHERE iid = #{iid}
-	</update>
+
 
 
 
@@ -95,9 +90,9 @@
 	<!-- 插入用户 -->
 	<insert id="insert">
 		INSERT INTO orders(
-		mid,phone,address,credate,pay
+		mid,phone,address,credate,pay,delivery
 		) VALUES (
-		#{member.mid},#{phone},#{address},#{credate},#{pay}
+		#{member.mid},#{phone},#{address},#{credate},#{pay},#{delivery}
 		)
 	</insert>
 
@@ -144,6 +139,14 @@
 		WHERE a.oid = #{oid}
 	</select>
 
+	<!-- 修改订单信息  -->
+	<update id="updateOrders">
+		UPDATE orders SET
+		phone = #{phone},
+		address = #{address},
+		delivery = #{delivery}
+		WHERE oid = #{oid}
+	</update>
 
 
 </mapper>

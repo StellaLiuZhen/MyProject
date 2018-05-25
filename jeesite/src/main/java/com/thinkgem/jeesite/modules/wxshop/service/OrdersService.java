@@ -46,7 +46,7 @@ public class OrdersService extends BaseService implements InitializingBean {
      * @return
      */
     public Orders getOrders(Integer iid) {
-        Orders orders = new Orders() ;
+        Orders orders = new Orders();
         orders = OrdersUtils.get(iid.toString());
         orders.setAllDetails(detailsDao.findDetails(iid));
         return orders;
@@ -55,7 +55,6 @@ public class OrdersService extends BaseService implements InitializingBean {
     public String getOid(String iid) {
         return Integer.toString(OrdersUtils.get(iid).getOid());
     }
-
 
 
     @Transactional(readOnly = false)
@@ -77,19 +76,15 @@ public class OrdersService extends BaseService implements InitializingBean {
 
     @Transactional(readOnly = false)
     public void saveOrders(Orders orders) {
-        if (orders.getOid() == null) {
-            //增加用户
-            ordersDao.insert(orders);
-        } else {
-            // 更新用户数据
-            orders.preUpdate();
-            ordersDao.update(orders);
-        }
-        if (orders.getOid() != null) {
-            // 将当前用户同步到Activiti
-            saveActivitiOrders(orders);
 
-        }
+        // 更新用户数据
+        ordersDao.updateOrders(orders);
+
+//        if (orders.getOid() != null) {
+//            // 将当前用户同步到Activiti
+//            saveActivitiOrders(orders);
+//
+//        }
     }
 
     private void saveActivitiOrders(Orders orders) {
@@ -133,21 +128,22 @@ public class OrdersService extends BaseService implements InitializingBean {
 
 
     @Transactional(readOnly = false)
-    public boolean insertOrders(String mid) {
+    public String insertOrders(String mid) {
         boolean flag = true;
+        String msg = null;
         //1、首先判断出当前用户信息是否完整，要根据mid查询一个用户的完整信息
         Member member = memberDao.get(mid);
-        if (member.getPhone() == null || member.getAddress() == null) {
-            System.out.println("用户信息不完整");
-            flag = false ;
-            return flag;
+        if (StringUtils.isBlank(member.getPhone()) || StringUtils.isBlank(member.getAddress())) {
+            msg = "用户信息不完整";
+            flag = false;
+            return msg;
         }
         //2、如果信息完整，判断数据库中是否包含购物车信息
         List<Shopcar> shopcars = shopcarDao.findByMember(mid);
         if (shopcars.isEmpty()) {
-            System.out.println("购物车没有商品");
-            flag = false ;
-            return flag;
+            msg = "购物车没有商品";
+            flag = false;
+            return msg;
         }
         //3、如果现在要是有购物信息，则查寻出所有的商品信息
         Shopcar shopcar = new Shopcar();
@@ -165,12 +161,12 @@ public class OrdersService extends BaseService implements InitializingBean {
             Goods good = goodsDao.getAmount(gid);
             Integer amount = good.getAmount();
             double price = good.getPrice();
-            if(amount - car.getAmount() < 0){
-                System.out.println("没有足够的出售数量");
-                flag = false ;
-                return flag;
+            if (amount - car.getAmount() < 0) {
+                msg = "没有足够的出售数量";
+                flag = false;
+                return msg;
             } else {
-                System.out.println("找到商品信息和购物车信息" );
+                System.out.println("找到商品信息和购物车信息");
                 //计算总价格
                 pay += price * car.getAmount();
             }
@@ -182,13 +178,14 @@ public class OrdersService extends BaseService implements InitializingBean {
         orders.setAddress(member.getAddress());
         orders.setCredate(new Date());
         orders.setPay(pay);
+        orders.setDelivery("未发货");
         ordersDao.insert(orders);
         //7、取得当前增长的订单编号，因为订单详情需要这个编号
         orders.setOid(ordersDao.findLastInsertId());
         //8、创建订单详情信息
-        iterCars = null ;
+        iterCars = null;
         iterCars = shopcars.iterator();
-        List<Details> all = new ArrayList<Details>() ;
+        List<Details> all = new ArrayList<Details>();
         while (iterCars.hasNext()) {
             Details detail = new Details();
             Shopcar car = iterCars.next();
@@ -205,16 +202,20 @@ public class OrdersService extends BaseService implements InitializingBean {
             detail.setTitle(good.getTitle());
             detail.setPrice(good.getPrice());
             all.add(detail);
+            //9、更新商品库存
             flag = goodsDao.doUpdateAmount(good.getGid(), car.getAmount());
             System.out.println(flag);
         }
         flag = detailsDao.insertDetails(all);
         //10、清空购物车信息
-        flag = shopcarDao.deleteAll(mid) ;
-        return flag;
+        flag = shopcarDao.deleteAll(mid);
+        msg = "下单成功";
+        return msg;
     }
+
     /**
      * 根据用户编号，分页列出所有的订单信息
+     *
      * @param
      * @return
      * @Date: 23:15 2018/5/1
@@ -228,16 +229,15 @@ public class OrdersService extends BaseService implements InitializingBean {
     }
 
     /**
-     *
      * @param mid
      * @param oid
      * @return
      * @Date: 23:44 2018/5/1
      */
-    public Orders findByIdAndMid(String mid ,Integer oid) {
+    public Orders findByIdAndMid(String mid, Integer oid) {
         Orders orders = new Orders();
         orders.setOid(oid);
-        Member member = new Member() ;
+        Member member = new Member();
         member.setMid(mid);
         orders.setMember(member);
         orders = ordersDao.get(orders);
@@ -248,6 +248,7 @@ public class OrdersService extends BaseService implements InitializingBean {
 
     /**
      * 管理员查询所有订单
+     *
      * @param
      * @return
      * @Date: 3:10 2018/5/2
@@ -260,6 +261,12 @@ public class OrdersService extends BaseService implements InitializingBean {
         return page;
     }
 
-
+    @Transactional(readOnly = false)
+    public boolean upDelivery(Orders orders) {
+        boolean flag = true;
+        orders.setDelivery("已发货");
+        ordersDao.update(orders);
+        return flag;
+    }
 
 }

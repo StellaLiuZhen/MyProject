@@ -37,6 +37,8 @@
     <th>地址</th>
     <th>发布日期</th>
     <th>金额</th>
+    <th>订单状态</th>
+    <th>操作</th>
     <%--<shiro:hasPermission name="wxshop:orders:edit">--%>
         <%--<th>操作</th>--%>
     <%--</shiro:hasPermission></thead>--%>
@@ -49,6 +51,8 @@
             <td>${orders.address}</td>
             <td><fmt:formatDate value="${orders.credate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
             <td>${orders.pay}</td>
+            <td>${orders.delivery}</td>
+            <td><a href="${ctx}/wxshop/orders/formOrders?oid=${orders.oid}">修改订单信息</a></td>
             <%--<shiro:hasPermission name="wxshop:orders:edit">--%>
                 <%--<td>--%>
                     <%--<a href="${ctx}/wxshop/orders/form?oid=${orders.oid}">修改</a>--%>

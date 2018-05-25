@@ -9,7 +9,6 @@ function calGoods(gid) {
     num.toFixed(2);
     allPrice = accAdd(allPrice,num);
     allPrice.toFixed(2);
-    alert(allPrice + "," + count +","+ num);
     document.getElementById("cal-" + gid).innerHTML = "<font color = 'red'>" + num + "</font>";
     if(document.getElementById("result") != undefined){
         document.getElementById("result").innerHTML =  "<font color = 'red'>" + allPrice + "</font>" ;

@@ -19,20 +19,22 @@
 <c:if test="${orders != null}">
     <table border="1" cellpadding="5" cellspacing="0" >
         <tr>
-            <td>订单编号：</td>
-            <td>收件人：</td>
-            <td>联系电话：</td>
-            <td>订单金额：</td>
-            <td>收件地址：</td>
-            <td>下单日期：</td>
+            <td>订单编号</td>
+            <td>收件人</td>
+            <td>联系电话</td>
+            <td>订单金额</td>
+            <td>收件地址</td>
+            <td>下单日期</td>
+            <td>发货状态</td>
         </tr>
         <tr>
-            <td><a href="${ctx}/wxshop/orders/form?oid=${orders.oid}"> ${orders.oid}</a></td>
+            <td><a href="detailsList?oid=${orders.oid}">${orders.oid}</a></td>
             <td>${orders.member.mid}</td>
             <td>${orders.phone}</td>
             <td>${orders.pay}</td>
             <td>${orders.address}</td>
             <td><fmt:formatDate value="${orders.credate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+            <td>${orders.delivery}</td>
         </tr>
     </table>
     <br>

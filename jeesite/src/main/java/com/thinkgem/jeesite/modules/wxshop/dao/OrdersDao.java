@@ -25,4 +25,12 @@ public interface OrdersDao extends CrudDao<Orders> {
      */
     public List<Orders> findOrders(Orders entity);
 
+    /**
+     * 管理员修改订单信息
+     * @param id
+     * @return
+     * @Date: 16:04 2018/4/23
+     */
+    public boolean updateOrders(Orders orders);
+
 }

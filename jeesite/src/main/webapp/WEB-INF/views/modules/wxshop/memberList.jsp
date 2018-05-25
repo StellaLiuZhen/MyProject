@@ -8,7 +8,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/wxshop/member/list">用户列表</a></li>
-		<shiro:hasPermission name="wxshop:member:edit"><li><a href="${ctx}/wxshop/member/form">用户添加</a></li></shiro:hasPermission>
+		<%--<shiro:hasPermission name="wxshop:member:edit"><li><a href="${ctx}/wxshop/member/form">用户添加</a></li></shiro:hasPermission>--%>
 	</ul>
 	<form:form id="searchForm" modelAttribute="member" action="${ctx}/wxshop/member/list" method="post" class="breadcrumb form-search ">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>

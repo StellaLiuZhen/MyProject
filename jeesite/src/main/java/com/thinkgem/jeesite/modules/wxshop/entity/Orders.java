@@ -12,6 +12,16 @@ public class Orders extends DataEntity<Orders> {
     private String address;
     private Date credate ;
     private Double pay ;
+    private String delivery;
+
+    public String getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(String delivery) {
+        this.delivery = delivery;
+    }
+
     private List<Details> allDetails ;
 
     public Integer getOid() {

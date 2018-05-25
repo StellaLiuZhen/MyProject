@@ -44,6 +44,7 @@
 			<td>订单金额：</td>
 			<td>收件地址：</td>
 			<td>下单日期：</td>
+			<td>订单状态：</td>
 		</tr>
 		<tr>
 			<td><a href="${ctx}/wxshop/orders/form?oid=${orders.oid}"> ${orders.oid}</a></td>
@@ -52,8 +53,10 @@
 			<td>${orders.pay}</td>
 			<td>${orders.address}</td>
 			<td><fmt:formatDate value="${orders.credate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+			<td>${orders.delivery}</td>
 		</tr>
 	</table>
+	<a href="upDelivery?oid=${orders.oid}">已发货</a>&nbsp;&nbsp;&nbsp;<a href="${ctx}/wxshop/orders/formOrders?oid=${orders.oid}">修改订单信息</a>
 	<br>
 	<br>
 	<br>

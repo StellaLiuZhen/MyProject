@@ -7,10 +7,7 @@ import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.wxshop.entity.*;
 import com.thinkgem.jeesite.modules.wxshop.filter.CookieUtil;
-import com.thinkgem.jeesite.modules.wxshop.service.GoodsService;
-import com.thinkgem.jeesite.modules.wxshop.service.MemberServiceBack;
-import com.thinkgem.jeesite.modules.wxshop.service.OrdersService;
-import com.thinkgem.jeesite.modules.wxshop.service.ShopcarService;
+import com.thinkgem.jeesite.modules.wxshop.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +26,9 @@ public class FrontGoodsController extends BaseController {
 
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private ItemService itemService;
 
     @Autowired
     private ShopcarService shopcarService;
@@ -50,14 +50,20 @@ public class FrontGoodsController extends BaseController {
     public String login(Member member, HttpServletRequest request, HttpServletResponse response, Model model) {
         if (StringUtils.isNotBlank(member.getMid())) {
             member = memberService.getMember(member.getMid());
-            model.addAttribute("member", member);
             if (member != null) {
                 request.getSession().setAttribute("mid", member.getMid());
                 if (request.getParameter("reme") != null) {  //表示选择了复选框
                     int expiry = Integer.parseInt(request.getParameter("reme"));
                     CookieUtil.save(response, request, "mid", member.getMid(), expiry);
                 }
-                return "modules/wxshop/front/index";
+                if (member.getDelFlag().equals("1")) {
+                    model.addAttribute("member", member);
+                    return "modules/wxshop/front/index";
+                } else {
+                    request.getSession().invalidate();
+                    request.setAttribute("msg","账号已被锁定");
+                    return "modules/wxshop/login";
+                }
             } else {
                 return "modules/wxshop/login";
             }
@@ -83,6 +89,8 @@ public class FrontGoodsController extends BaseController {
     @RequestMapping(value = {"frontList", ""})
     public String frontList(Goods goods, HttpServletRequest request, HttpServletResponse response, Model model) {
         Page<Goods> page = goodsService.frontFindGoods(new Page<Goods>(request, response), goods);
+        List<Item> items = itemService.findList();
+        model.addAttribute("items", items);
         model.addAttribute("page", page);
         return "modules/wxshop/front/frontGoodsList";
     }
@@ -212,20 +220,21 @@ public class FrontGoodsController extends BaseController {
     }
 
     @RequestMapping(value = "insertOrders")
-    public String insertOrders(Member member, HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes) {
+    public String insertOrders(Orders orders, HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes) {
         if (Global.isDemoMode()) {
             addMessage(redirectAttributes, "演示模式，不允许操作！");
             return "redirect:" + adminPath + "/sys/user/list?repage";
         }
         String mid = (String) request.getSession().getAttribute("mid");
-        ordersService.insertOrders(mid);
-        return login(member, request, response, model);
+        String msg = ordersService.insertOrders(mid);
+        request.setAttribute("msg",msg);
+        return ordersList(orders, request, response, model);
     }
 
     @RequestMapping(value = {"ordersList", ""})
     public String ordersList(Orders orders, HttpServletRequest request, HttpServletResponse response, Model model) {
         String mid = (String) request.getSession().getAttribute("mid");
-        Member member = new Member() ;
+        Member member = new Member();
         member.setMid(mid);
         orders.setMember(member);
         Page<Orders> page = ordersService.findOrdersByMid(new Page<Orders>(request, response), orders);
@@ -239,7 +248,7 @@ public class FrontGoodsController extends BaseController {
 
         int oid = Integer.parseInt(request.getParameter("oid"));
         String mid = (String) request.getSession().getAttribute("mid");
-        request.setAttribute("orders",ordersService.findByIdAndMid(mid,oid));
+        request.setAttribute("orders", ordersService.findByIdAndMid(mid, oid));
         return "modules/wxshop/front/frontDetailsList";
     }
 }

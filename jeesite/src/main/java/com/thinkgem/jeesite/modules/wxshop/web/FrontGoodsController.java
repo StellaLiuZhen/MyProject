@@ -8,6 +8,7 @@ import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.wxshop.entity.*;
 import com.thinkgem.jeesite.modules.wxshop.filter.CookieUtil;
 import com.thinkgem.jeesite.modules.wxshop.service.*;
+import com.thinkgem.jeesite.modules.wxshop.utils.CheckoutUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -38,6 +41,45 @@ public class FrontGoodsController extends BaseController {
 
     @Autowired
     private OrdersService ordersService;
+
+
+
+
+    /**
+     * 微信消息接收和token验证
+     * @param model
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping("hello")
+    public void hello(Model model, HttpServletRequest request,HttpServletResponse response) throws IOException {
+        boolean isGet = request.getMethod().toLowerCase().equals("get");
+        PrintWriter print;
+        if (isGet) {
+            // 微信加密签名
+            String signature = request.getParameter("signature");
+            // 时间戳
+            String timestamp = request.getParameter("timestamp");
+            // 随机数
+            String nonce = request.getParameter("nonce");
+            // 随机字符串
+            String echostr = request.getParameter("echostr");
+            // 通过检验signature对请求进行校验，若校验成功则原样返回echostr，表示接入成功，否则接入失败
+            if (signature != null && CheckoutUtil.checkSignature(signature, timestamp, nonce)) {
+                try {
+                    print = response.getWriter();
+                    print.write(echostr);
+                    print.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+
 
 
     @RequestMapping(value = {"index"})

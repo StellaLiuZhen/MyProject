@@ -122,7 +122,7 @@ public class FrontGoodsController extends BaseController {
     public String oAuth2Url(@RequestParam("code") String code, HttpServletRequest request)
     {
         //静默授权
-        String get_access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
+        String get_access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx02e61c5975732fc4&secret=aa933a5c431bc0d3cbff833a506f0682&code=CODE&grant_type=authorization_code";
 
 //        // 将请求、响应的编码均设置为UTF-8（防止中文乱码）
 //        request.setCharacterEncoding("UTF-8");
@@ -135,8 +135,12 @@ public class FrontGoodsController extends BaseController {
 
         String json = HttpsGetUtil.doHttpsGetJson(get_access_token_url);
 
+        System.out.println("******************json=" + json);
+
         JSONObject jsonObject = JSONObject.fromObject(json);
         String openid = jsonObject.getString("openid");
+
+        System.out.println("******************openID=" + openid);
 
         request.setAttribute("msg",openid);
         return "modules/wxshop/front/openID";

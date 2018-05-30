@@ -9,16 +9,26 @@ import com.thinkgem.jeesite.modules.wxshop.entity.*;
 import com.thinkgem.jeesite.modules.wxshop.filter.CookieUtil;
 import com.thinkgem.jeesite.modules.wxshop.service.*;
 import com.thinkgem.jeesite.modules.wxshop.utils.CheckoutUtil;
+
+import com.thinkgem.jeesite.modules.wxshop.utils.HttpsGetUtil;
+
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -77,6 +87,66 @@ public class FrontGoodsController extends BaseController {
             }
         }
     }
+
+    @RequestMapping(value = {"index2"})
+    public String index2(Goods goods, Model model) {
+
+        return "modules/wxshop/login";
+    }
+
+
+
+
+        /**
+         * 拼接网页授权链接
+         * 此处步骤也可以用页面链接代替
+         * @return
+         */
+        @RequestMapping(value = { "oauth2wx.do" })
+        public String Oauth2API(HttpServletRequest request){
+            String oauth2Url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx02e61c5975732fc4&redirect_uri=http://liuzhen20.top/front/oauth2me.do&response_type=code&scope=snsapi_base&state=sunlight#wechat_redirect";
+            return "redirect:" + oauth2Url;
+        }
+
+
+
+
+    /**
+     * 网页授权获取用户openid
+     * @Title: getOpenId
+     * @param @param code
+     * @throws
+     */
+    @RequestMapping(value = "oauth2me.do", method = RequestMethod.GET)
+    @ResponseBody
+    public String oAuth2Url(@RequestParam("code") String code, HttpServletRequest request)
+    {
+        //静默授权
+        String get_access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
+
+//        // 将请求、响应的编码均设置为UTF-8（防止中文乱码）
+//        request.setCharacterEncoding("UTF-8");
+//        response.setCharacterEncoding("UTF-8");
+//        String code = request.getParameter("code");
+
+        System.out.println("******************code=" + code);
+
+        get_access_token_url = get_access_token_url.replace("CODE", code);
+
+        String json = HttpsGetUtil.doHttpsGetJson(get_access_token_url);
+
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        String openid = jsonObject.getString("openid");
+
+        request.setAttribute("msg",openid);
+        return "modules/wxshop/front/openID";
+    }
+
+
+
+
+
+
 
 
 

@@ -38,23 +38,24 @@
 </form:form>
 <sys:message content="${message}"/>
 <c:forEach items="${page.list}" var="goods">
+    <font size=7>
     <table id="contentTable" class="table table-striped table-bordered table-condensed">
         <tr>
-            <td rowspan="4">
+            <td rowspan="3">
                 <a href="frontGoodsView?gid=${goods.gid}">
                     <img src="${goods.photo}" style="width: 60px;height: 60px">
                 </a>
             </td>
         </tr>
         <tr>
-            <td width="7%"><strong>商品名称：</strong></td>
-            <td width="7%"><a href="frontGoodsView?gid=${goods.gid}">${goods.title}</a></td>
-            <td colspan="2" width="81%">
+
+            <td ><a href="frontGoodsView?gid=${goods.gid}">${goods.title}</a></td>
+            <td colspan="2">
                     ${goods.note}
             </td>
         </tr>
         <tr>
-            <td><strong>商品价格：</strong></td>
+
             <td>${goods.price}</td>
             <td colspan="2">
                 <a href="addCar?gid=${goods.gid}">
@@ -63,6 +64,7 @@
             </td>
         </tr>
     </table>
+    </font>
 </c:forEach>
 <div class="pagination">${page}</div>
 </body>

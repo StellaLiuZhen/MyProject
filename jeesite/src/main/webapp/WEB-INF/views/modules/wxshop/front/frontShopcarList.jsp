@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
+<%@include file="/WEB-INF/views/include/head.jsp" %>
 <html>
 <head>
     <title>商品管理</title>
@@ -79,7 +80,7 @@
 
 <c:if test="${allGoods != null && shopcars != null}">
     <form action="/front/updateShopcar" method="post">
-        <table border="1" cellpadding="5" cellspacing="0" width="42%">
+        <table border="1" cellpadding="5" cellspacing="0" >
             <tr>
                 <td width="5%">图片</td>
                 <td width="5%">名称</td>

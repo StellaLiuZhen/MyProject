@@ -33,6 +33,7 @@ public class MemberServiceBack extends BaseService implements InitializingBean {
 
     /**
      * 获取用户
+     *
      * @param mid
      * @return
      */
@@ -68,37 +69,33 @@ public class MemberServiceBack extends BaseService implements InitializingBean {
     }
 
     private void deleteActivitiMember(Member member) {
-        if (!Global.isSynActivitiIndetity()){
+        if (!Global.isSynActivitiIndetity()) {
             return;
         }
-        if(member!=null) {
+        if (member != null) {
             String memberMid = member.getName();//ObjectUtils.toString(user.getId());
             identityService.deleteUser(memberMid);
         }
     }
 
     @Transactional(readOnly = false)
-    public void updateMember(Member member){
-        if (StringUtils.isBlank(member.getName())){
-            memberDao.doUpdateMember(member);
-        }
+    public void updateMember(Member member) {
+        memberDao.doUpdateMember(member);
     }
-
-
 
 
     @Transactional(readOnly = false)
     public void saveMember(Member member) {
-        if (StringUtils.isBlank(member.getName())){
+        if (StringUtils.isBlank(member.getName())) {
             //增加用户
             member.setName(IdGen.uuid());
             memberDao.insert(member);
-        }else{
+        } else {
             // 更新用户数据
             member.preUpdate();
             memberDao.update(member);
         }
-        if (StringUtils.isNotBlank(member.getMid())){
+        if (StringUtils.isNotBlank(member.getMid())) {
             // 将当前用户同步到Activiti
             saveActivitiMember(member);
 
@@ -106,7 +103,7 @@ public class MemberServiceBack extends BaseService implements InitializingBean {
     }
 
     private void saveActivitiMember(Member member) {
-        if (!Global.isSynActivitiIndetity()){
+        if (!Global.isSynActivitiIndetity()) {
             return;
         }
         String memberMid = member.getName();//ObjectUtils.toString(member.getId());
@@ -129,30 +126,39 @@ public class MemberServiceBack extends BaseService implements InitializingBean {
         String plain = Encodes.unescapeHtml(plainPassword);
         byte[] salt = Digests.generateSalt(SALT_SIZE);
         byte[] hashPassword = Digests.sha1(plain.getBytes(), salt, HASH_INTERATIONS);
-        System.out.println(Encodes.encodeHex(salt)+ Encodes.encodeHex(hashPassword));
-        return Encodes.encodeHex(salt)+ Encodes.encodeHex(hashPassword);
+        System.out.println(Encodes.encodeHex(salt) + Encodes.encodeHex(hashPassword));
+        return Encodes.encodeHex(salt) + Encodes.encodeHex(hashPassword);
     }
 
     /**
      * 是需要同步Activiti数据，如果从未同步过，则同步数据。
      */
     private static boolean isSynActivitiIndetity = true;
+
     public void afterPropertiesSet() throws Exception {
-        if (!Global.isSynActivitiIndetity()){
+        if (!Global.isSynActivitiIndetity()) {
             return;
         }
-        if (isSynActivitiIndetity){
+        if (isSynActivitiIndetity) {
             isSynActivitiIndetity = false;
             // 同步用户数据
             List<org.activiti.engine.identity.User> memberList = identityService.createUserQuery().list();
-            if (memberList.size() == 0){
+            if (memberList.size() == 0) {
                 Iterator<Member> members = memberDao.findAllList(new Member()).iterator();
-                while(members.hasNext()) {
+                while (members.hasNext()) {
                     saveActivitiMember(members.next());
                 }
             }
         }
     }
+
+    @Transactional(readOnly = false)
+    public void insert(Member member) {  //微信端第一次登陆自动加入用户表
+        if (member != null) {
+            memberDao.insert(member);
+        }
+    }
+
 
 //    public Member show(Set<String> ids) throws Exception {
 //        return memberDao.findById(ids);

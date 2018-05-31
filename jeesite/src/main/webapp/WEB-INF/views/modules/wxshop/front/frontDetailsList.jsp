@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
+<%@include file="/WEB-INF/views/include/head.jsp" %>
 <html>
 <head>
     <title>查看订单</title>
@@ -29,7 +30,7 @@
         </tr>
         <tr>
             <td><a href="detailsList?oid=${orders.oid}">${orders.oid}</a></td>
-            <td>${orders.member.mid}</td>
+            <td>${orders.member.name}</td>
             <td>${orders.phone}</td>
             <td>${orders.pay}</td>
             <td>${orders.address}</td>

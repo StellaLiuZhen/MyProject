@@ -50,7 +50,7 @@
     <div class="control-group">
         <label class="control-label">收件人:</label>
         <div class="controls">
-            <label class="lbl">${orders.member.mid}</label>
+            <form:input path="member.name" htmlEscape="false" maxlength="100"/>
         </div>
     </div>
     <div class="control-group">

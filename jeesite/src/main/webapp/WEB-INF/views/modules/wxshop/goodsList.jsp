@@ -4,6 +4,30 @@
 <head>
 	<title>商品管理</title>
 	<meta name="decorator" content="default"/>
+	<script type="text/javascript">
+        $(document).ready(function() {
+            $("#btnExport").click(function(){
+                top.$.jBox.confirm("确认要导出用户数据吗？","系统提示",function(v,h,f){
+                    if(v=="ok"){
+                        $("#searchForm").attr("action","${ctx}/sys/user/export");
+                        $("#searchForm").submit();
+                    }
+                },{buttonsFocus:1});
+                top.$('.jbox-body .jbox-icon').css('top','55px');
+            });
+            $("#btnImport").click(function(){
+                $.jBox($("#importBox").html(), {title:"导入数据", buttons:{"关闭":true},
+                    bottomText:"导入文件不能超过5M，仅允许导入“xls”或“xlsx”格式文件！"});
+            });
+        });
+        function page(n,s){
+            if(n) $("#pageNo").val(n);
+            if(s) $("#pageSize").val(s);
+            $("#searchForm").attr("action","${ctx}/wxshop/goods/list");
+            $("#searchForm").submit();
+            return false;
+        }
+	</script>
 </head>
 <body>
 	<ul class="nav nav-tabs">
@@ -17,7 +41,10 @@
 		<ul class="ul-form">
 			<li>
 				<label>类&nbsp;&nbsp;&nbsp;型：</label>
-				<form:input path="item.iid" htmlEscape="false" maxlength="50" class="input-medium"/>
+				<form:select path="item.iid">
+					<form:option value="" label="请选择"/>
+					<form:options items="${items}" itemLabel="title" itemValue="iid" htmlEscape="false"/>
+				</form:select>
 			</li>
 			<li>
 				<label>名&nbsp;&nbsp;&nbsp;称：</label>
@@ -25,7 +52,9 @@
 			</li>
 			<li>
 				<label>状&nbsp;&nbsp;&nbsp;态：</label>
-				<form:input path="status" htmlEscape="false" maxlength="50" class="input-medium"/>
+				<form:select path="status">
+					<form:options items="${fns:getDictList('yes_no')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
 			</li>
 			<li class="btns">
 				<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
@@ -35,13 +64,12 @@
 	</form:form>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
-		<thead><><th class="sort-column login_name">编号</th><th class="sort-column name">名称</th><th>类型</th><th>发布日期</th><th>价格</th><th>数量</th><th>点击</th><th>状态</th><shiro:hasPermission name="wxshop:goods:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead><><th class="sort-column login_name">编号</th><th class="sort-column name">名称</th><th>发布日期</th><th>价格</th><th>数量</th><th>点击</th><th>状态</th><shiro:hasPermission name="wxshop:goods:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="goods">
 			<tr>
 				<td><a href="${ctx}/wxshop/goods/form?gid=${goods.gid}">${goods.gid}</a></td>
 				<td><a href="${ctx}/wxshop/goods/form?gid=${goods.gid}">${goods.title}</a></td>
-				<td>${goods.item.iid}</td>
                 <td><fmt:formatDate value="${goods.pubdate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td>${goods.price}</td>
 				<td>${goods.amount}</td>

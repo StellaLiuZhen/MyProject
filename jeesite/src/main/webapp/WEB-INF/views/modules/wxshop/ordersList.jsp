@@ -4,6 +4,30 @@
 <head>
     <title>商品管理</title>
     <meta name="decorator" content="default"/>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#btnExport").click(function(){
+                top.$.jBox.confirm("确认要导出用户数据吗？","系统提示",function(v,h,f){
+                    if(v=="ok"){
+                        $("#searchForm").attr("action","${ctx}/sys/user/export");
+                        $("#searchForm").submit();
+                    }
+                },{buttonsFocus:1});
+                top.$('.jbox-body .jbox-icon').css('top','55px');
+            });
+            $("#btnImport").click(function(){
+                $.jBox($("#importBox").html(), {title:"导入数据", buttons:{"关闭":true},
+                    bottomText:"导入文件不能超过5M，仅允许导入“xls”或“xlsx”格式文件！"});
+            });
+        });
+        function page(n,s){
+            if(n) $("#pageNo").val(n);
+            if(s) $("#pageSize").val(s);
+            $("#searchForm").attr("action","${ctx}/wxshop/orders/list");
+            $("#searchForm").submit();
+            return false;
+        }
+    </script>
 </head>
 <body>
 <ul class="nav nav-tabs">
@@ -46,7 +70,7 @@
     <c:forEach items="${page.list}" var="orders">
         <tr>
             <td><a href="${ctx}/wxshop/orders/form?oid=${orders.oid}">${orders.oid}</a></td>
-            <td><a href="${ctx}/wxshop/orders/form?oid=${orders.oid}">${orders.member.mid}</a></td>
+            <td><a href="${ctx}/wxshop/orders/form?oid=${orders.oid}">${orders.member.name}</a></td>
             <td>${orders.phone}</td>
             <td>${orders.address}</td>
             <td><fmt:formatDate value="${orders.credate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>

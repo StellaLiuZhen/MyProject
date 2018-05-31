@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
+<%@include file="/WEB-INF/views/include/head.jsp" %>
 <html>
 <head>
     <title>商品管理</title>
@@ -27,10 +28,10 @@
 </form:form>
 <sys:message content="${message}"/>
 <c:if test="${orders != null}">
-    <table border="1" cellpadding="5" cellspacing="0" width="49%">
+    <table border="1" cellpadding="5" cellspacing="0">
         <tr>
             <td width="5%">订单编号</td>
-            <td width="5%">联系人</td>
+            <td width="5%">收件人</td>
             <td width="5%">联系电话</td>
             <td width="7%">收件地址</td>
             <td width="7%">下单日期</td>
@@ -39,7 +40,7 @@
         <c:forEach items="${page.list}" var="orders">
             <tr>
                 <td><a href="detailsList?oid=${orders.oid}"> ${orders.oid}</a></td>
-                <td>${orders.member.mid}</td>
+                <td>${orders.member.name}</td>
                 <td>${orders.phone}</td>
                 <td>${orders.address}</td>
                 <td><fmt:formatDate value="${orders.credate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>

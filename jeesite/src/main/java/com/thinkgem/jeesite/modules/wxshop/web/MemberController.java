@@ -68,7 +68,8 @@ public class MemberController extends BaseController {
         if (StringUtils.isNotBlank(member.getPassword())) {
             member.setPassword(MemberServiceBack.entryptPassword(member.getPassword()));
         } else {
-            member.setName( memberServiceB.getName(member.getMid()));
+            System.out.println(member.getMid());
+
         }
         if (!beanValidator(model, member)){
             return form(member, model);

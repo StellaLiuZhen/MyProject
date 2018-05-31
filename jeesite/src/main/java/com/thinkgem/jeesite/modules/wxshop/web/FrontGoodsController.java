@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -53,17 +54,16 @@ public class FrontGoodsController extends BaseController {
     private OrdersService ordersService;
 
 
-
-
     /**
      * 微信消息接收和token验证
+     *
      * @param model
      * @param request
      * @param response
      * @throws IOException
      */
     @RequestMapping("hello")
-    public void hello(Model model, HttpServletRequest request,HttpServletResponse response) throws IOException {
+    public void hello(Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         boolean isGet = request.getMethod().toLowerCase().equals("get");
         PrintWriter print;
         if (isGet) {
@@ -88,39 +88,29 @@ public class FrontGoodsController extends BaseController {
         }
     }
 
-    @RequestMapping(value = {"index2"})
-    public String index2(Goods goods, Model model) {
-
-        return "modules/wxshop/login";
+    /**
+     * 拼接网页授权链接
+     * 此处步骤也可以用页面链接代替
+     *
+     * @return
+     */
+    @RequestMapping(value = {"oauth2wx.do"})
+    public String Oauth2API(HttpServletRequest request) {
+        String oauth2Url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx02e61c5975732fc4&redirect_uri=http://liuzhen20.top/front/oauth2me.do&response_type=code&scope=snsapi_base&state=sunlight#wechat_redirect";
+        return "redirect:" + oauth2Url;
     }
-
-
-
-
-        /**
-         * 拼接网页授权链接
-         * 此处步骤也可以用页面链接代替
-         * @return
-         */
-        @RequestMapping(value = { "oauth2wx.do" })
-        public String Oauth2API(HttpServletRequest request){
-            String oauth2Url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx02e61c5975732fc4&redirect_uri=http://liuzhen20.top/front/oauth2me.do&response_type=code&scope=snsapi_base&state=sunlight#wechat_redirect";
-            return "redirect:" + oauth2Url;
-        }
-
-
 
 
     /**
      * 网页授权获取用户openid
-     * @Title: getOpenId
+     *
      * @param @param code
      * @throws
+     * @Title: getOpenId
      */
     @RequestMapping(value = "oauth2me.do", method = RequestMethod.GET)
     @ResponseBody
-    public String oAuth2Url(@RequestParam("code") String code, HttpServletRequest request)
-    {
+    public String oAuth2Url(@RequestParam("code") String code, Member member, HttpServletRequest request, HttpServletResponse response, Model model) {
         //静默授权
         String get_access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx02e61c5975732fc4&secret=aa933a5c431bc0d3cbff833a506f0682&code=CODE&grant_type=authorization_code";
 
@@ -142,18 +132,33 @@ public class FrontGoodsController extends BaseController {
 
         System.out.println("******************openID=" + openid);
 
-        request.setAttribute("msg",openid);
-        return "modules/wxshop/front/openID";
+        member.setMid(openid);
+        return login2(member, request, response, model);
     }
 
+    @RequestMapping(value = {"login2"})
+    public String login2(Member member, HttpServletRequest request, HttpServletResponse response, Model model) {
+        request.getSession().setAttribute("mid", member.getMid());
+        Member member2= new Member();
+        member2 = memberService.getMember(member.getMid());
+        if (member2 != null) {
+            if (member2.getDelFlag().equals("1")) {
+                model.addAttribute("member", member2);
+                return "modules/wxshop/front/index";
+            } else {
+                request.getSession().invalidate();
+                request.setAttribute("msg", "账号已被锁定");
+                return "modules/wxshop/login";
+            }
+        } else {
+            System.out.println("查无此号");
 
-
-
-
-
-
-
-
+            member.setRegdate(new Date());
+            member.setDelFlag("1");
+            memberService.insert(member);
+            return login2(member, request, response, model);
+        }
+    }
 
 
     @RequestMapping(value = {"index"})
@@ -177,7 +182,7 @@ public class FrontGoodsController extends BaseController {
                     return "modules/wxshop/front/index";
                 } else {
                     request.getSession().invalidate();
-                    request.setAttribute("msg","账号已被锁定");
+                    request.setAttribute("msg", "账号已被锁定");
                     return "modules/wxshop/login";
                 }
             } else {
@@ -336,15 +341,15 @@ public class FrontGoodsController extends BaseController {
     }
 
     @RequestMapping(value = "insertOrders")
-    public String insertOrders(Orders orders, HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes) {
+    public String insertOrders(Goods goods,Orders orders, HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes) {
         if (Global.isDemoMode()) {
             addMessage(redirectAttributes, "演示模式，不允许操作！");
             return "redirect:" + adminPath + "/sys/user/list?repage";
         }
         String mid = (String) request.getSession().getAttribute("mid");
         String msg = ordersService.insertOrders(mid);
-        request.setAttribute("msg",msg);
-        return ordersList(orders, request, response, model);
+        request.setAttribute("msg", msg);
+        return frontList(goods,request,response,model);
     }
 
     @RequestMapping(value = {"ordersList", ""})

@@ -37,7 +37,7 @@
 		<li><a href="${ctx}/wxshop/member/list">用户列表</a></li>
 		<li class="active"><a href="${ctx}/wxshop/member/form?mid=${member.mid}">用户<shiro:hasPermission name="wxshop:member:edit">${not empty member.mid?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="wxshop:member:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="member" action="${ctx}/wxshop/member/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="member" action="${ctx}/wxshop/member/save?mid=${member.mid}" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>
 		<div class="control-group">
@@ -48,9 +48,9 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">编号:</label>
+			<label class="control-label">姓名:</label>
 			<div class="controls">
-				<form:input path="mid" htmlEscape="false" maxlength="50" class="required"/>
+				<form:input path="name" htmlEscape="false" maxlength="50" class="required"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>

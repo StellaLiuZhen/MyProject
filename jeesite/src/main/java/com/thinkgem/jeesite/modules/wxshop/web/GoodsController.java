@@ -5,7 +5,9 @@ import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.wxshop.entity.Goods;
+import com.thinkgem.jeesite.modules.wxshop.entity.Item;
 import com.thinkgem.jeesite.modules.wxshop.service.GoodsService;
+import com.thinkgem.jeesite.modules.wxshop.service.ItemService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "${adminPath}/wxshop/goods")
@@ -23,6 +26,9 @@ public class GoodsController extends BaseController {
 
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private ItemService itemService;
 
     @RequiresPermissions("wxshop:goods:view")
     @RequestMapping(value = {"index"})
@@ -35,6 +41,8 @@ public class GoodsController extends BaseController {
     @RequestMapping(value = {"list", ""})
     public String list(Goods goods, HttpServletRequest request, HttpServletResponse response, Model model) {
         Page<Goods> page = goodsService.findGoods(new Page<Goods>(request,response),goods) ;
+        List<Item> items = itemService.findList();
+        model.addAttribute("items", items);
         model.addAttribute("page", page);
         return "modules/wxshop/goodsList";
     }

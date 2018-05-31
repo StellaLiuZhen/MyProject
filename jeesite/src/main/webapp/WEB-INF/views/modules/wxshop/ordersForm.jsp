@@ -48,7 +48,7 @@
 		</tr>
 		<tr>
 			<td><a href="${ctx}/wxshop/orders/form?oid=${orders.oid}"> ${orders.oid}</a></td>
-			<td>${orders.member.mid}</td>
+			<td>${orders.member.name}</td>
 			<td>${orders.phone}</td>
 			<td>${orders.pay}</td>
 			<td>${orders.address}</td>

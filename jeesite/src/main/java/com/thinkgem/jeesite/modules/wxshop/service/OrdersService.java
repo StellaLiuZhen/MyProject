@@ -133,8 +133,8 @@ public class OrdersService extends BaseService implements InitializingBean {
         String msg = null;
         //1、首先判断出当前用户信息是否完整，要根据mid查询一个用户的完整信息
         Member member = memberDao.get(mid);
-        if (StringUtils.isBlank(member.getPhone()) || StringUtils.isBlank(member.getAddress())) {
-            msg = "用户信息不完整";
+        if (StringUtils.isBlank(member.getPhone()) || StringUtils.isBlank(member.getAddress()) || StringUtils.isBlank(member.getName()) ) {
+            msg = "用户信息不完整,请补充完整！";
             flag = false;
             return msg;
         }
@@ -174,6 +174,7 @@ public class OrdersService extends BaseService implements InitializingBean {
         //6、创建订单对象
         Orders orders = new Orders();
         orders.setMember(member);
+        System.out.println("======="+orders.getMember().getName());
         orders.setPhone(member.getPhone());
         orders.setAddress(member.getAddress());
         orders.setCredate(new Date());

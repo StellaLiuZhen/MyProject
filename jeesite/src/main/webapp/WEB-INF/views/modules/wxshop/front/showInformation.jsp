@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@include file="/WEB-INF/views/include/head.jsp" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp" %>
 <html>
 <head>
@@ -18,6 +19,12 @@
 <form:form id="inputForm" modelAttribute="member" action="updateMember" method="post" class="form-horizontal">
     <form:hidden path="id"/>
     <sys:message content="${message}"/>
+    <div class="control-group">
+        <label class="control-label">收件人:</label>
+        <div class="controls">
+            <form:input path="name" htmlEscape="false" maxlength="100"/>
+        </div>
+    </div>
     <div class="control-group">
         <label class="control-label">手机:</label>
         <div class="controls">

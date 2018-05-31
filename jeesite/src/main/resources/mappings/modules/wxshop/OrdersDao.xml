@@ -5,6 +5,7 @@
 	<sql id="ordersColumns">
 		a.oid AS "oid",
 		a.mid AS "member.mid",
+		a.name AS "member.name",
 		a.phone AS "phone",
 		a.address AS "address",
 		a.credate AS "credate",
@@ -90,9 +91,9 @@
 	<!-- 插入用户 -->
 	<insert id="insert">
 		INSERT INTO orders(
-		mid,phone,address,credate,pay,delivery
+		mid,name,phone,address,credate,pay,delivery
 		) VALUES (
-		#{member.mid},#{phone},#{address},#{credate},#{pay},#{delivery}
+		#{member.mid},#{member.name},#{phone},#{address},#{credate},#{pay},#{delivery}
 		)
 	</insert>
 
@@ -142,6 +143,7 @@
 	<!-- 修改订单信息  -->
 	<update id="updateOrders">
 		UPDATE orders SET
+		name = #{member.name}
 		phone = #{phone},
 		address = #{address},
 		delivery = #{delivery}

@@ -109,7 +109,6 @@ public class FrontGoodsController extends BaseController {
      * @Title: getOpenId
      */
     @RequestMapping(value = "oauth2me.do")
-    @ResponseBody
     public String oAuth2Url(@RequestParam("code") String code, Member member, HttpServletRequest request, HttpServletResponse response, Model model) {
         //静默授权
         String get_access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx02e61c5975732fc4&secret=aa933a5c431bc0d3cbff833a506f0682&code=CODE&grant_type=authorization_code";

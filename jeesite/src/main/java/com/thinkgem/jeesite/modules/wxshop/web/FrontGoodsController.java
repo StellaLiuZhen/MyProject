@@ -96,7 +96,7 @@ public class FrontGoodsController extends BaseController {
      */
     @RequestMapping(value = {"oauth2wx.do"})
     public String Oauth2API(HttpServletRequest request) {
-        String oauth2Url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx02e61c5975732fc4&redirect_uri=http://liuzhen20.top/front/oauth2me.do&response_type=code&scope=snsapi_base&state=sunlight#wechat_redirect";
+        String oauth2Url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx02e61c5975732fc4&redirect_uri=http://liuzhen20.top/front/oauth2me&response_type=code&scope=snsapi_base&state=sunlight#wechat_redirect";
         return "redirect:" + oauth2Url;
     }
 
@@ -108,29 +108,18 @@ public class FrontGoodsController extends BaseController {
      * @throws
      * @Title: getOpenId
      */
-    @RequestMapping(value = "oauth2me.do")
-    public String oAuth2Url(@RequestParam("code") String code, Member member, HttpServletRequest request, HttpServletResponse response, Model model) {
+    @RequestMapping(value = "oauth2me")
+    public String oAuth2Url(String code, Member member, HttpServletRequest request, HttpServletResponse response, Model model) {
         //静默授权
+        code = request.getParameter("code");
         String get_access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx02e61c5975732fc4&secret=aa933a5c431bc0d3cbff833a506f0682&code=CODE&grant_type=authorization_code";
-
-//        // 将请求、响应的编码均设置为UTF-8（防止中文乱码）
-//        request.setCharacterEncoding("UTF-8");
-//        response.setCharacterEncoding("UTF-8");
-//        String code = request.getParameter("code");
-
         System.out.println("******************code=" + code);
-
         get_access_token_url = get_access_token_url.replace("CODE", code);
-
         String json = HttpsGetUtil.doHttpsGetJson(get_access_token_url);
-
         System.out.println("******************json=" + json);
-
         JSONObject jsonObject = JSONObject.fromObject(json);
         String openid = jsonObject.getString("openid");
-
         System.out.println("******************openID=" + openid);
-
         member.setMid(openid);
         return login2(member, request, response, model);
     }

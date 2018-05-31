@@ -108,7 +108,7 @@ public class FrontGoodsController extends BaseController {
      * @throws
      * @Title: getOpenId
      */
-    @RequestMapping(value = "oauth2me.do", method = RequestMethod.GET)
+    @RequestMapping(value = "oauth2me.do")
     @ResponseBody
     public String oAuth2Url(@RequestParam("code") String code, Member member, HttpServletRequest request, HttpServletResponse response, Model model) {
         //静默授权

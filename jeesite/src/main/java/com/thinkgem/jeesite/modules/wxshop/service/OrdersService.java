@@ -134,7 +134,7 @@ public class OrdersService extends BaseService implements InitializingBean {
         //1、首先判断出当前用户信息是否完整，要根据mid查询一个用户的完整信息
         Member member = memberDao.get(mid);
         if (StringUtils.isBlank(member.getPhone()) || StringUtils.isBlank(member.getAddress()) || StringUtils.isBlank(member.getName()) ) {
-            msg = "用户信息不完整,请补充完整！";
+            msg = "用户信息不完整,请点击用户中心补充完整！";
             flag = false;
             return msg;
         }

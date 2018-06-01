@@ -15,8 +15,12 @@
 <div>
     <c:if test="${mid != null}">
         <br><br>
-        ${mid} 您好，感谢登录使用！  <a href="showMember">个人中心</a>     <a href="logout">安全退出</a><br><br>
-        <a href="frontList">商品列表</a>  <a href="shopcarList">购物车</a>  <a href="ordersList">全部订单</a><br><br><br>
+        <font size="7">${mid}</font> <font size="7">您好，感谢登录使用！</font> <br><br><br>
+        <a href="frontList"><font size="7">商品列表</font></a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="shopcarList"><font size="7">购物车</font></a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="ordersList"><font size="7">全部订单</font></a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="showMember"><font size="7">个人中心</font></a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="logout"><font size="5">安全退出</font></a><br><br><br>
     </c:if>
 </div>
 
@@ -30,21 +34,21 @@
 <c:if test="${orders != null}">
     <table border="1" cellpadding="5" cellspacing="0">
         <tr>
-            <td width="5%">订单编号</td>
-            <td width="5%">收件人</td>
-            <td width="5%">联系电话</td>
-            <td width="7%">收件地址</td>
-            <td width="7%">下单日期</td>
-            <td width="7%">发货状态</td>
+            <td width="5%"><font size="5">订单编号</font></td>
+            <td width="5%"><font size="5">收件人</font></td>
+            <td width="5%"><font size="5">联系电话</font></td>
+            <td width="7%"><font size="5">收件地址</font></td>
+            <td width="7%"><font size="5">下单日期</font></td>
+            <td width="7%"><font size="5">发货状态</font></td>
         </tr>
         <c:forEach items="${page.list}" var="orders">
             <tr>
-                <td><a href="detailsList?oid=${orders.oid}"> ${orders.oid}</a></td>
-                <td>${orders.member.name}</td>
-                <td>${orders.phone}</td>
-                <td>${orders.address}</td>
-                <td><fmt:formatDate value="${orders.credate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                <td>${orders.delivery}</td>
+                <td><a href="detailsList?oid=${orders.oid}"> <font size="5">${orders.oid}</font></a></td>
+                <td><font size="5">${orders.member.name}</font></td>
+                <td><font size="5">${orders.phone}</font></td>
+                <td><font size="5">${orders.address}</font></td>
+                <td><font size="5"><fmt:formatDate value="${orders.credate}" pattern="yyyy-MM-dd HH:mm:ss"/></font></td>
+                <td><font size="5">${orders.delivery}</font></td>
             </tr>
         </c:forEach>
     </table>

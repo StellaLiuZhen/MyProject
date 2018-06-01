@@ -10,7 +10,8 @@
 <div>
     <c:if test="${mid != null}">
         <br><br>
-        <font size="7">${mid}</font> <font size="7">您好，感谢登录使用！</font> <br><br><br>
+        <font size="7">${mid}</font><br><br><br>
+        <font size="7">您好，感谢登录使用！</font> <br><br><br>
         <a href="frontList"><font size="7">商品列表</font></a>&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="shopcarList"><font size="7">购物车</font></a>&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="ordersList"><font size="7">全部订单</font></a>&nbsp;&nbsp;&nbsp;&nbsp;
